@@ -15,13 +15,13 @@ windTransl = ["wind", "wind", "viento"]
 tempTransl = ["temperature", "temperatur", "temperatura"]
 sunTransl = ["sun", "sonne", "sol"]
 
-windSentenceTransl = ['Current Temperatur is {}°C. Todays minimum temperature is {}°C and maximum temperature is {}°C.',
+tempSentenceTransl = ['Current Temperatur is {}°C. Todays minimum temperature is {}°C and maximum temperature is {}°C.',
                       'Die aktuelle temperatur ist{}°C. Das heutige minimum ist {}°C und das heutige maximum {}°C',
                       'La temperatura actual es {}°C. La temperatura mínima de hoy es {}°C y la temperatura máxima es {}°C.']
-tempSentenceTransl = ['The sunrise is at {} and the sunset at {}',
+sunSentenceTransl = ['The sunrise is at {} and the sunset at {}',
                       'Der Sonnenaufgang ist um {} und der Sonnenuntergang um {}',
                       'El amanecer está en {} y el atardecer en {}']
-sunSentenceTransl = ['The wind comes from {} with {}m/s.'
+windSentenceTransl = ['The wind comes from {} with {}m/s.',
                      'Der Wind kommt von {} mit einer Geschwindigkeit von {}m/s}',
                      'El viento viene de {} con {}m/s.']
 
@@ -151,13 +151,13 @@ def reply(updates, weatherData):
             elif text in sunTransl:
                 languageIndex = sunTransl.index(text)
                 
-                sunset = weather['sys']['sunset']
+                sunset = weatherData['sys']['sunset']
                 sunsetDatetime = datetime.fromtimestamp(int(sunset))
-                sunsetTimestring = '{:%H:%M}'.format(sunsetTime + timedelta(hours=2))
+                sunsetTimestring = '{:%H:%M}'.format(sunsetDatetime + timedelta(hours=2))
                 
-                sunrise = weather['sys']['sunrise']
+                sunrise = weatherData['sys']['sunrise']
                 sunriseDatetime = datetime.fromtimestamp(int(sunrise))
-                sunriseTimestring = '{:%H:%M}'.format(sunriseTime + timedelta(hours=2))
+                sunriseTimestring = '{:%H:%M}'.format(sunriseDatetime + timedelta(hours=2))
                 
                 send_message(sunSentenceTransl[languageIndex].format(sunriseTimestring, sunsetTimestring), chat)
             else:
