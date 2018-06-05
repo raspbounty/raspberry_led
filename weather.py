@@ -153,11 +153,11 @@ def reply(updates, weatherData):
                 
                 sunset = weatherData['sys']['sunset']
                 sunsetDatetime = datetime.fromtimestamp(int(sunset))
-                sunsetTimestring = '{:%H:%M}'.format(sunsetDatetime + timedelta(hours=2))
+                sunsetTimestring = '{:%H:%M}'.format(sunsetDatetime)
                 
                 sunrise = weatherData['sys']['sunrise']
                 sunriseDatetime = datetime.fromtimestamp(int(sunrise))
-                sunriseTimestring = '{:%H:%M}'.format(sunriseDatetime + timedelta(hours=2))
+                sunriseTimestring = '{:%H:%M}'.format(sunriseDatetime)
                 
                 send_message(sunSentenceTransl[languageIndex].format(sunriseTimestring, sunsetTimestring), chat)
             else:
