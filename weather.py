@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import json 
 import requests
 from pprint import pprint
@@ -5,15 +6,21 @@ import time
 from datetime import datetime
 from datetime import timedelta
 import urllib
+import sys, os
 
 
+enterCountryName = False
+newCountryName = False
+testForCountryChange = False
 TOKEN = "278626847:AAEtEZYw0ka6x6FJEttLYRem5gSVfl5AxBg"
 URL = "https://api.telegram.org/bot{}/".format(TOKEN)
-aachenID = '3247448'
+aachenID = '6553047'
+countryID = aachenID
 apiKey = '2a6b0bc577fb4cbfc7a48b69afcc3eec'
 windTransl = ["wind", "wind", "viento"]
 tempTransl = ["temperature", "temperatur", "temperatura"]
 sunTransl = ["sun", "sonne", "sol"]
+countryTransl = ["country"]
 
 tempSentenceTransl = ['Current Temperatur is {}°C. Todays minimum temperature is {}°C and maximum temperature is {}°C.',
                       'Die aktuelle temperatur ist{}°C. Das heutige minimum ist {}°C und das heutige maximum {}°C',
@@ -128,12 +135,57 @@ def getWindDirection(degrees):
     return direction
    
 def reply(updates, weatherData):
+    global testForCountryChange
+    global newCountryName
+    global enterCountryName
     for update in updates["result"]:
         try:
             chat = update["message"]["chat"]["id"]
             text = update["message"]["text"].lower()
-            
-            if text in tempTransl:
+            if testForCountryChange:
+                testForCountryChange = False
+                if text == "yes":
+                    newCountryName = True
+                    send_message('type the name of the country', chat)
+                else:
+                    send_message('current country will not be changed', chat)
+            elif newCountryName:
+                newCountryName = False
+                
+                with open('city.list.json') as f:
+                    data = json.load(f)
+                
+                resultCountry = []
+                resultIDs = []
+                for country in data:
+                    if text.lower() in country["name"].lower():
+                        resultCountry.append(country["name"])
+                        resultIDs.append(country["id"])
+                if len(resultCountry) == 0:
+                    send_message('Country not found. Current country will not be changed', chat)
+                elif len(resultCountry) == 1:
+                    send_message('Country changed to {}'.format(resultCountry[0]), chat)
+                    countryID = resultIDs[0]
+                else:
+                    enterCountryName = True
+                    send_message('More than one match found. Please enter one of the following countries to change. {}'.format(" ".join(str(x) for x in resultCountry)), chat)
+            elif enterCountryName:
+                with open('city.list.json') as f:
+                    data = json.load(f)
+                
+                resultCountry = []
+                resultIDs = []
+                for country in data:
+                    if text.lower() == country["name"].lower():
+                        send_message('Country changed to {}'.format(country['name']), chat)
+                        countryID = country['id']
+                        enterCountryName = False
+                
+                if enterCountryName:
+                    send_message('Country not found. Current country will not be changed', chat)
+                    enterCountryName = False
+                
+            elif text in tempTransl:
                 languageIndex = tempTransl.index(text)
                 
                 temp = round(weatherData['main']['temp'] - 273.15, 2)
@@ -160,10 +212,15 @@ def reply(updates, weatherData):
                 sunriseTimestring = '{:%H:%M}'.format(sunriseDatetime)
                 
                 send_message(sunSentenceTransl[languageIndex].format(sunriseTimestring, sunsetTimestring), chat)
+            elif text in countryTransl:
+                testForCountryChange = True
+                send_message('current country is {} \n Would you like to change the country? yes-no'.format(weatherData['name']), chat)
             else:
                 send_message('unknown command', chat)
         except Exception as e:
-            print(e)
+            exc_type, exc_obj, exc_tb = sys.exc_info()
+            fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+            print(exc_type, fname, exc_tb.tb_lineno)
    
 def get_last_update_id(updates):
     update_ids = []
