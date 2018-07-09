@@ -2,6 +2,9 @@
 
 import time
 from neopixel import *
+import sys
+
+sys.path.append('.:build/lib.linux-armv7l-2.7')
 
 # LED strip configuration:
 LED_COUNT      = 64      # Number of LED pixels.
@@ -66,6 +69,7 @@ def stringToList(text):
         else:
             #append questionmark
             print("unknown symbol {}".format(letter))
+    return output
 
 def write(strip, color, text, wait_ms=50):
     textList = stringToList(text)
@@ -79,9 +83,9 @@ def write(strip, color, text, wait_ms=50):
     #flatten the text lists to one list
     flatText = [item for sublist in formattedText for item in sublist]
     #sort the text list
-    formattedText.sort()
+    flatText.sort()
     #reverse text list
-    formattedText = formattedText[::-1]    
+    flatText = flatText[::-1]    
 
     
     while flatText[-1] < 63:
