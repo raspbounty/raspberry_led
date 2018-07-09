@@ -1,0 +1,13 @@
+run python files with sudo python
+
+library from:
+
+https://github.com/jgarff/rpi_ws281x
+
+needed
+
+also in rpi_ws281x folder
+need to be installed, view README in Folder
+
+
+    

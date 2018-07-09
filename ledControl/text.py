@@ -4,7 +4,7 @@ import time
 from neopixel import *
 import sys
 
-sys.path.append('.:build/lib.linux-armv7l-2.7')
+#sys.path.append('.:build/lib.linux-armv7l-2.7')
 
 # LED strip configuration:
 LED_COUNT      = 64      # Number of LED pixels.
