@@ -8,14 +8,14 @@ from datetime import datetime
 from datetime import timedelta
 import urllib
 import sys, os
-import LedMatrix
+from LedMatrix import LedMatrix
 
 countryID = '6553047'
 apiKey = '2a6b0bc577fb4cbfc7a48b69afcc3eec'
 
 def changeIcon(matrix, weatherData, oldIcon):
     weatherIcon = weatherData['weather'][0]['icon'].encode("utf-8")
-    print(weathericon)
+    print(weatherIcon)
     if weatherIcon != oldIcon:
         iconString = 'error'
         if weatherIcon == '01d' or weatherIcon == '01n':
@@ -74,11 +74,11 @@ def getWeatherUpdate():
 
 if __name__ == '__main__':
     matrix = LedMatrix(1)
-    currWeatherIcon
+    currWeatherIcon = 'unset'
     try:
         while True:
             weatherData = getWeatherUpdate()
             currWeatherIcon = changeIcon(matrix, weatherData, currWeatherIcon)
             time.sleep(1800)
     except KeyboardInterrupt:
-        matrix.colorWipe(Color(0, 0, 0), 10)
+        matrix.colorWipe()
