@@ -38,7 +38,8 @@ class LedMatrix:
                 'W': [46, 30, 37, 36, 53, 52, 51, 50, 18, 19, 20, 21, 17, 49],
                 'X': [41, 42, 17, 18, 27, 35, 44, 45, 46, 20, 21, 22],
                 'Y': [49, 50, 17, 18, 43, 27, 36, 37, 38],
-                'Z': [46, 38, 30, 22, 45, 36, 27, 18, 17, 25, 33, 41]}
+                'Z': [46, 38, 30, 22, 45, 36, 27, 18, 17, 25, 33, 41],
+                'a': [21, 30, 38, 46, 28, 36, 45, 26, 34, 20, 19]}
 
     def __init__(self, iconSet=0):
         if iconset==0:
@@ -78,6 +79,7 @@ class LedMatrix:
         self.strip.begin()
 
     def colorWipe(self, color=Color(0, 0, 0), wait_ms=50):
+        """Colorize the matrix in one color, blank by default."""
         # Wipe color across display a pixel at a time.
         for i in range(self.strip.numPixels()):
             self.strip.setPixelColor(i, color)
@@ -85,6 +87,7 @@ class LedMatrix:
             time.sleep(wait_ms/1000.0)
 
     def showIcon(self, iconText, wait_ms=50):
+        """Display one of the predefined icons."""
         if iconText in self.icons:
             icon = self.icons[iconText]
 
@@ -94,6 +97,7 @@ class LedMatrix:
             print('unknown icon: {}'.format(iconText))
 
     def draw(self, color, points, wait_ms=50):
+        """display the Points in a specific color."""
         for point in points:
             if point >= 0 and point <= (LED_COUNT-1):
                 self.strip.setPixelColor(point, color)
@@ -101,6 +105,7 @@ class LedMatrix:
         self.strip.show()
 
     def stringToList(self, text):
+        """Return the list version of the String."""
         output = []
         # toDo: implement also lower case letter and remove this
         text = text.upper()
