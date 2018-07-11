@@ -1,72 +1,84 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+import json 
+import requests
+from pprint import pprint
 import time
-from neopixel import *
-import argparse
+from datetime import datetime
+from datetime import timedelta
+import urllib
+import sys, os
+import LedMatrix
 
-# LED strip configuration:
-LED_COUNT      = 64      # Number of LED pixels.
-LED_PIN        = 18      # GPIO pin connected to the pixels (18 uses PWM!).
-#LED_PIN        = 10      # GPIO pin connected to the pixels (10 uses SPI /dev/spidev0.0).
-LED_FREQ_HZ    = 800000  # LED signal frequency in hertz (usually 800khz)
-LED_DMA        = 10      # DMA channel to use for generating signal (try 10)
-LED_BRIGHTNESS = 10     # Set to 0 for darkest and 255 for brightest
-LED_INVERT     = False   # True to invert the signal (when using NPN transistor level shift)
-LED_CHANNEL    = 0       # set to '1' for GPIOs 13, 19, 41, 45 or 53
+countryID = '6553047'
+apiKey = '2a6b0bc577fb4cbfc7a48b69afcc3eec'
 
+def changeIcon(matrix, weatherData, oldIcon):
+    weatherIcon = weatherData['weather'][0]['icon'].encode("utf-8")
+    print(weathericon)
+    if weatherIcon != oldIcon:
+        iconString = 'error'
+        if weatherIcon == '01d' or weatherIcon == '01n':
+            iconString = 'clear_sky'
+        elif weatherIcon == '02d' or weatherIcon == '02n':
+            iconString = 'few_clouds'
+        elif weatherIcon == '03d' or weatherIcon == '03n':
+            iconString = 'scattered_clouds'
+        elif weatherIcon == '04d' or weatherIcon == '04n':
+            iconString = 'broken_clouds'
+        elif weatherIcon == '09d' or weatherIcon == '09n':
+            iconString = 'shower_rain'
+        elif weatherIcon == '10d' or weatherIcon == '10n':
+            iconString = 'rain'
+        elif weatherIcon == '11d' or weatherIcon == '11n':
+            iconString = 'thunderstorm'
+        elif weatherIcon == '13d' or weatherIcon == '13n':
+            iconString = 'snow'
+        elif weatherIcon == '50d' or weatherIcon == '50n':
+            iconString = 'mist'
+        matrix.showIcon(iconString)
+        print(iconString)
+    return weatherIcon
 
+def getWeatherUpdate():
+    data = requests.get('http://api.openweathermap.org/data/2.5/weather?id={}&APPID={}'.format(countryID, apiKey))
+    binary = data.content
+    output = json.loads(binary)
+    '''
+    output = {u'base': u'stations',
+            u'clouds': {u'all': 90},
+            u'cod': 200,
+            u'coord': {u'lat': 50.75, u'lon': 6.24},
+            u'dt': 1528023300,
+            u'id': 3247448,
+            u'main': {u'humidity': 64,
+                    u'pressure': 1019,
+                    u'temp': 294.64,
+                    u'temp_max': 296.15,
+                    u'temp_min': 293.15},
+            u'name': u'St\xe4dteregion Aachen',
+            u'sys': {u'country': u'DE',
+                    u'id': 5205,
+                    u'message': 0.0065,
+                    u'sunrise': 1527996342,
+                    u'sunset': 1528054883,
+                    u'type': 1},
+            u'visibility': 10000,
+            u'weather': [{u'description': u'overcast clouds',
+                        u'icon': u'04d',
+                        u'id': 804,
+                        u'main': u'Clouds'}],
+            u'wind': {u'deg': 360, u'speed': 2.1}}
+            '''
+    return output
 
-# Define functions which animate LEDs in various ways.
-def colorWipe(strip, color, wait_ms=50):
-    #Wipe color across display a pixel at a time.
-    for i in range(strip.numPixels()):
-        strip.setPixelColor(i, color)
-        strip.show()
-        time.sleep(wait_ms/1000.0)
-
-def draw(strip, color, points, wait_ms=50):
-    for point in points:
-        strip.setPixelColor(point, color)
-        time.sleep(wait_ms/1000)
-    strip.show()
-
-
-# Main program logic follows:
 if __name__ == '__main__':
-    # Create NeoPixel object with appropriate configuration.
-    strip = Adafruit_NeoPixel(LED_COUNT, LED_PIN, LED_FREQ_HZ, LED_DMA, LED_INVERT, LED_BRIGHTNESS, LED_CHANNEL)
-    # Intialize the library (must be called once before other functions).
-    strip.begin()
-
-    wait_ms = 50
-
-    #icon with structure: [[color,ledIDs],[color,ledIDs]] 
-    cloud = [[Color(255, 255, 255),[1, 2, 8, 9, 10, 11, 16, 17, 18, 19, 24, 
-        25, 26, 27, 32, 33, 34, 35, 40, 41, 42, 
-        43, 48, 49, 50, 51, 57, 58]]]
-
-    shower_rain = [cloud[0],[Color(0, 0, 255), [21, 23, 37, 39, 53, 55]]]
-    rain = [20, 21, 22, 23, 36, 37, 38, 39, 52, 53, 54, 55]
-
-    clear_sky = [0,3,7,9,14,19,20,26,27,28,29,31,
-        32,34,35,36,37,43,44,49,54,56,60,63]
-    
+    matrix = LedMatrix(1)
+    currWeatherIcon
     try:
-        """
-        draw(strip, Color(255, 255, 255), cloud)
-        time.sleep(5)
-        colorWipe(strip, Color(0, 0, 0), 10)
-        draw(strip, Color(255, 255, 0), sun)
-        time.sleep(5)
-        colorWipe(strip, Color(0, 0, 0), 10)
-        draw(strip, Color(255, 255, 255), cloud)
-        draw(strip, Color(0, 0, 255), lightRain)
-        time.sleep(5)
-        colorWipe(strip, Color(0, 0, 0), 10)
-        draw(strip, Color(255, 255, 255), cloud)
-        draw(strip, Color(0, 0, 255), heavyRain)
-        time.sleep(5)
-        colorWipe(strip, Color(0, 0, 0), 10)"""
-        print(cloud)
-        print(shower_rain)
+        while True:
+            weatherData = getWeatherUpdate()
+            currWeatherIcon = changeIcon(matrix, weatherData, currWeatherIcon)
+            time.sleep(1800)
     except KeyboardInterrupt:
-    	colorWipe(strip, Color(0, 0, 0), 10)
+        matrix.colorWipe(Color(0, 0, 0), 10)
