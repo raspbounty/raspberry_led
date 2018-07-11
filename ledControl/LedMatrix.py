@@ -71,9 +71,9 @@ class LedMatrix:
                       'thunderstrom': [[Color(255, 255, 0), thunderstormIds]],
                       'mist': [[Color(255, 255, 255), mistIds]]}
 
-        self.strip = Adafruit_NeoPixel(LED_COUNT, LED_PIN, LED_FREQ_HZ,
-                                       LED_DMA, LED_INVERT, LED_BRIGHTNESS,
-                                       LED_CHANNEL)
+        self.strip = Adafruit_NeoPixel(self.LED_COUNT, self.LED_PIN, self.LED_FREQ_HZ,
+                                       self.LED_DMA, self.LED_INVERT, self.LED_BRIGHTNESS,
+                                       self.LED_CHANNEL)
         # Intialize the library (must be called once before other functions).
         self.strip.begin()
 
@@ -89,7 +89,7 @@ class LedMatrix:
             icon = self.icons[iconText]
 
             for subIcon in icon:
-                draw(subIcon[0], subIcon[1])
+                self.draw(subIcon[0], subIcon[1])
         else:
             print('unknown icon: {}'.format(iconText))
 
@@ -113,7 +113,7 @@ class LedMatrix:
         return output
 
     def write(self, color, text, wait_ms=50):
-        textList = stringToList(text)
+        textList = self.stringToList(text)
         formattedText = []
         flatText = []
         counter = 0
@@ -133,7 +133,7 @@ class LedMatrix:
             for i in range(self.strip.numPixels()):
                 self.strip.setPixelColor(i, Color(0, 0, 0))
             # draw the current text list
-            draw(color, flatText, 0)
+            self.draw(color, flatText, 0)
             self.strip.show()
             time.sleep(250/1000.0)
             # move text 1 coloumn to the left
@@ -149,4 +149,8 @@ if __name__ == "__main__":
 
     matrix.write(Color(0, 0, 255), 'Hello')
 
-    matrix.showIcon('sun')
+    matrix.showIcon('clear_sky')
+
+    time.sleep(1)
+
+    matrix.colorWipe()
