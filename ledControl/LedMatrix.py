@@ -41,13 +41,25 @@ class LedMatrix:
                 'Z': [46, 38, 30, 22, 45, 36, 27, 18, 17, 25, 33, 41]}
 
     def __init__(self, iconSet=0):
-        # if iconset=0:
-        cloudIds = [1, 2, 8, 9, 10, 11, 16, 17, 18, 19, 24, 25, 26, 27, 32, 33,
-                    34, 35, 40, 41, 42, 43, 48, 49, 50, 51, 57, 58]
-        showerRainIds = [21, 23, 37, 39, 53, 55]
-        rainIds = [20, 21, 22, 23, 36, 37, 38, 39, 52, 53, 54, 55]
-        clearSkyIds = [0, 3, 7, 9, 14, 19, 20, 26, 27, 28, 29, 31, 32, 34, 35,
-                       36, 37, 43, 44, 49, 54, 56, 60, 63]
+        if iconset==0:
+            cloudIds = [1, 2, 8, 9, 10, 11, 16, 17, 18, 19, 24, 25, 26, 27, 32,
+                        33, 34, 35, 40, 41, 42, 43, 48, 49, 50, 51, 57, 58]
+            showerRainIds = [21, 23, 37, 39, 53, 55]
+            rainIds = [20, 21, 22, 23, 36, 37, 38, 39, 52, 53, 54, 55]
+            clearSkyIds = [0, 3, 7, 9, 14, 19, 20, 26, 27, 28, 29, 31, 32, 34,
+                           35, 36, 37, 43, 44, 49, 54, 56, 60, 63]
+            thunderstromIDs = [25, 24, 33, 42, 43, 44, 36, 47, 38, 37, 28, 29,
+                               52, 35, 34, 51, 32, 41, 20, 26, 17, 16]
+        elif iconset == 1:
+            cloudIds = [53, 45, 29, 37, 21, 13, 4, 3, 2, 9, 17, 25, 26, 32, 40,
+                        48, 57, 58, 59, 60]
+            showerRainIds = [63, 54, 47, 38, 31, 22]
+            clearSkyIds = [0, 3, 7, 9, 14, 19, 20, 26, 27, 28, 29, 31, 32, 34,
+                           35, 36, 37, 43, 44, 49, 54, 56, 60, 63]
+            mistIds = [57, 48, 59, 50, 41, 32, 16, 25, 34, 43, 52, 61, 45, 54, 36,
+                    27, 18, 9, 0, 2, 11, 20, 29, 38, 47, 63, 31, 22, 13, 4, 6, 15]
+            thunderstromIDs = [25, 24, 33, 42, 43, 44, 36, 47, 38, 37, 28, 29,
+                               52, 35, 34, 51, 32, 41, 20, 26, 17, 16]
 
         # icons with structure: [[color,ledIDs],[color,ledIDs],...]
         self.icons = {'cloud': [[Color(255, 255, 255), cloudIds]],
@@ -55,7 +67,9 @@ class LedMatrix:
                                       [Color(0, 0, 255), showerRainIds]],
                       'rain': [[Color(255, 255, 255), cloudIds],
                                [Color(0, 0, 255), rainIds]],
-                      'clear_sky': [[Color(255, 255, 0), clearSkyIds]]}
+                      'clear_sky': [[Color(255, 255, 0), clearSkyIds]],
+                      'thunderstrom': [[Color(255, 255, 0), thunderstormIds]],
+                      'mist': [[Color(255, 255, 255), mistIds]]}
 
         self.strip = Adafruit_NeoPixel(LED_COUNT, LED_PIN, LED_FREQ_HZ,
                                        LED_DMA, LED_INVERT, LED_BRIGHTNESS,
@@ -81,7 +95,7 @@ class LedMatrix:
 
     def draw(self, color, points, wait_ms=50):
         for point in points:
-            if point > 0 and point < (LED_COUNT-1):
+            if point >= 0 and point <= (LED_COUNT-1):
                 self.strip.setPixelColor(point, color)
                 time.sleep(wait_ms/1000)
         self.strip.show()
