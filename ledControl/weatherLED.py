@@ -11,10 +11,11 @@ import sys, os
 from LedMatrix import LedMatrix
 import RPi.GPIO as GPIO
 
+weatherData = ''
 countryID = '6553047'
 apiKey = '2a6b0bc577fb4cbfc7a48b69afcc3eec'
 
-def changeIcon(matrix, weatherData, oldIcon):
+def changeIcon(matrix, oldIcon):
     weatherIcon = weatherData['weather'][0]['icon'].encode("utf-8")
     print(weatherIcon)
     if weatherIcon != oldIcon:
@@ -74,7 +75,11 @@ def getWeatherUpdate():
     return output
 
 def button_callback(channel):
-    print("Pressed")
+    temp = weatherData['main']['temp'] - 273.15
+    temp = int(round(temp))
+    print(temp)
+    matrix.write(16711680, str(temp))
+    changeIcon(matrix, 'unset')
     
 if __name__ == '__main__':
     
@@ -88,7 +93,7 @@ if __name__ == '__main__':
     try:
         while True:
             weatherData = getWeatherUpdate()
-            currWeatherIcon = changeIcon(matrix, weatherData, currWeatherIcon)
+            currWeatherIcon = changeIcon(matrix, currWeatherIcon)
             time.sleep(1800)
     except KeyboardInterrupt:
         matrix.colorWipe()
