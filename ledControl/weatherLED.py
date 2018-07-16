@@ -74,19 +74,27 @@ def getWeatherUpdate():
             '''
     return output
 
-def button_callback(channel):
+def button_showTemp(channel):
     temp = weatherData['main']['temp'] - 273.15
     temp = int(round(temp))
     print(temp)
     matrix.write(16711680, str(temp))
     changeIcon(matrix, 'unset')
     
+def button_shutdown(channel):
+    matrix.colorWipe()
+    os.system('sudo shutdown -h now')
+    
 if __name__ == '__main__':
     
     GPIO.setmode(GPIO.BCM)
-    GPIO.setup(23, GPIO.IN, pull_up_down=GPIO.PUD_UP) # Set pin 23 to be an input pin and set initial value to be pulled low (off)
+    GPIO.setup(23, GPIO.IN, pull_up_down=GPIO.PUD_UP)
     
-    GPIO.add_event_detect(23,GPIO.FALLING,callback=button_callback, bouncetime = 300) # Setup event on pin 23 rising edge       
+    GPIO.add_event_detect(23,GPIO.FALLING,callback=button_showTemp, bouncetime = 300)  
+    
+    GPIO.setup(24, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+    
+    GPIO.add_event_detect(24,GPIO.FALLING,callback=button_shutdown, bouncetime = 300)
     
     matrix = LedMatrix(1)
     currWeatherIcon = 'unset'
