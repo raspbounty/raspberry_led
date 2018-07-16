@@ -72,16 +72,28 @@ class LedMatrix:
                     27, 18, 9, 0, 2, 11, 20, 29, 38, 47, 63, 31, 22, 13, 4, 6, 15]
             thunderstormIds = [25, 24, 33, 42, 43, 44, 36, 47, 38, 37, 28, 29,
                                52, 35, 34, 51, 32, 41, 20, 26, 17, 16]
+            smallCloudIds = [60, 59, 20, 54, 46, 30, 38, 21, 27, 35, 42, 50, 61]
+            smallSunIds = [19, 18, 26, 33, 40, 9, 0]
+            snowIds = [38, 29, 22, 31, 12, 19, 3, 10, 52, 43, 59, 50, 25, 32,
+                       16, 62, 55]
+            smallBlackCloudIds = [60, 55, 47, 39, 31, 22, 21, 28, 36, 61, 62,
+                                  43, 51]
+            smallWhiteCloudIds = [42, 33, 25, 18, 10, 3, 4, 13]
 
         # icons with structure: [[color,ledIDs],[color,ledIDs],...]
-        self.icons = {'cloud': [[Color(255, 255, 255), cloudIds]],
+        self.icons = {'scattered_cloud': [[Color(255, 255, 255), cloudIds]],
                       'shower_rain': [[Color(255, 255, 255), cloudIds],
                                       [Color(0, 0, 255), showerRainIds]],
                       'rain': [[Color(255, 255, 255), cloudIds],
                                [Color(0, 0, 255), rainIds]],
                       'clear_sky': [[Color(255, 255, 0), clearSkyIds]],
                       'thunderstrom': [[Color(255, 255, 0), thunderstormIds]],
-                      'mist': [[Color(255, 255, 255), mistIds]]}
+                      'mist': [[Color(255, 255, 255), mistIds]],
+                      'few_clouds': [[Color(255, 255, 0), smallSunIds],
+                                     [Color(255, 255, 255), smallCloudIds]],
+                      'snow': [[Color(255, 255, 255), snowIds]],
+                      'broken_clouds': [[Color(0, 0, 0), smallBlackCloudIds], 
+                                        [Color(255, 255, 255), smallWhiteCloudIds]]}
 
         self.strip = Adafruit_NeoPixel(self.LED_COUNT, self.LED_PIN, self.LED_FREQ_HZ,
                                        self.LED_DMA, self.LED_INVERT, self.LED_BRIGHTNESS,
