@@ -43,35 +43,21 @@ def changeIcon(matrix, oldIcon):
     return weatherIcon
 
 def getWeatherUpdate():
-    data = requests.get('http://api.openweathermap.org/data/2.5/weather?id={}&APPID={}'.format(countryID, apiKey))
-    binary = data.content
-    output = json.loads(binary)
-    '''
-    output = {u'base': u'stations',
-            u'clouds': {u'all': 90},
-            u'cod': 200,
-            u'coord': {u'lat': 50.75, u'lon': 6.24},
-            u'dt': 1528023300,
-            u'id': 3247448,
-            u'main': {u'humidity': 64,
-                    u'pressure': 1019,
-                    u'temp': 294.64,
-                    u'temp_max': 296.15,
-                    u'temp_min': 293.15},
-            u'name': u'St\xe4dteregion Aachen',
-            u'sys': {u'country': u'DE',
-                    u'id': 5205,
-                    u'message': 0.0065,
-                    u'sunrise': 1527996342,
-                    u'sunset': 1528054883,
-                    u'type': 1},
-            u'visibility': 10000,
-            u'weather': [{u'description': u'overcast clouds',
-                        u'icon': u'04d',
-                        u'id': 804,
-                        u'main': u'Clouds'}],
-            u'wind': {u'deg': 360, u'speed': 2.1}}
-            '''
+    for attempt in range(10):
+        try:
+            data = requests.get('http://api.openweathermap.org/data/2.5/weather?id={}&APPID={}'.format(countryID, apiKey))
+        except requests.exceptions.RequestException as e:
+            data = "error"
+            print e
+            print("retry in 10 seconds")
+            time.sleep(10)
+            continue
+        break
+    
+    output = "error"
+    if data != "error":
+        binary = data.content
+        output = json.loads(binary)
     return output
 
 def button_showTemp(channel):
@@ -101,7 +87,8 @@ if __name__ == '__main__':
     try:
         while True:
             weatherData = getWeatherUpdate()
-            currWeatherIcon = changeIcon(matrix, currWeatherIcon)
+            if weatherData != "error":
+                currWeatherIcon = changeIcon(matrix, currWeatherIcon)
             time.sleep(1800)
     except KeyboardInterrupt:
         matrix.colorWipe()

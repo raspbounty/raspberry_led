@@ -93,7 +93,10 @@ class LedMatrix:
                                      [Color(255, 255, 255), smallCloudIds]],
                       'snow': [[Color(255, 255, 255), snowIds]],
                       'broken_clouds': [[Color(0, 0, 0), smallBlackCloudIds], 
-                                        [Color(255, 255, 255), smallWhiteCloudIds]]}
+                                        [Color(255, 255, 255), smallWhiteCloudIds]],
+                      'error': [[Color(255, 0, 0), [36, 35, 34, 33, 38, 54, 52,
+                                                    51, 50, 49, 17, 18, 19, 20,
+                                                    22, 6, 4, 3, 2, 1]]]}
 
         self.strip = Adafruit_NeoPixel(self.LED_COUNT, self.LED_PIN, self.LED_FREQ_HZ,
                                        self.LED_DMA, self.LED_INVERT, self.LED_BRIGHTNESS,
