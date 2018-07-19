@@ -4,14 +4,13 @@ from neopixel import *
 
 class LedMatrix:
     # LED strip configuration:
-    LED_COUNT      = 64      # Number of LED pixels.
-    LED_PIN        = 18      # GPIO pin connected to the pixels (18 uses PWM!).
-    #LED_PIN        = 10      # GPIO pin connected to the pixels (10 uses SPI /dev/spidev0.0).
-    LED_FREQ_HZ    = 800000  # LED signal frequency in hertz (usually 800khz)
-    LED_DMA        = 10      # DMA channel to use for generating signal (try 10)
+    LED_COUNT = 64      # Number of LED pixels.
+    LED_PIN = 18      # GPIO pin connected to the pixels (18 uses PWM!).
+    LED_FREQ_HZ = 800000  # LED signal frequency in hertz (usually 800khz)
+    LED_DMA = 10      # DMA channel to use for generating signal (try 10)
     LED_BRIGHTNESS = 10     # Set to 0 for darkest and 255 for brightest
-    LED_INVERT     = False   # True to invert the signal (when using NPN transistor level shift)
-    LED_CHANNEL    = 0       # set to '1' for GPIOs 13, 19, 41, 45 or 53
+    LED_INVERT = False   # True to invert the signal
+    LED_CHANNEL = 0       # set to '1' for GPIOs 13, 19, 41, 45 or 53
 
     alphabet = {'A': [42, 43, 44, 45, 46, 33, 36, 25, 28, 18, 19, 20, 21, 22],
                 'B': [41, 42, 43, 44, 45, 46, 33, 35, 38, 25, 27, 30, 18, 20, 21],
@@ -68,8 +67,9 @@ class LedMatrix:
             rainIds = [20, 21, 22, 23, 36, 37, 38, 39, 52, 53, 54, 55]
             clearSkyIds = [0, 3, 7, 9, 14, 19, 20, 26, 27, 28, 29, 31, 32, 34,
                            35, 36, 37, 43, 44, 49, 54, 56, 60, 63]
-            mistIds = [57, 48, 59, 50, 41, 32, 16, 25, 34, 43, 52, 61, 45, 54, 36,
-                    27, 18, 9, 0, 2, 11, 20, 29, 38, 47, 63, 31, 22, 13, 4, 6, 15]
+            mistIds = [57, 48, 59, 50, 41, 32, 16, 25, 34, 43, 52, 61, 45, 54,
+                       36, 27, 18, 9, 0, 2, 11, 20, 29, 38, 47, 63, 31, 22, 13,
+                       4, 6, 15]
             thunderstormIds = [25, 24, 33, 42, 43, 44, 36, 47, 38, 37, 28, 29,
                                52, 35, 34, 51, 32, 41, 20, 26, 17, 16]
             smallCloudIds = [60, 59, 20, 54, 46, 30, 38, 21, 27, 35, 42, 50, 61]
@@ -79,6 +79,8 @@ class LedMatrix:
             smallBlackCloudIds = [60, 55, 47, 39, 31, 22, 21, 28, 36, 61, 62,
                                   43, 51]
             smallWhiteCloudIds = [42, 33, 25, 18, 10, 3, 4, 13]
+            connectionErrorIds = [32, 33, 42, 34, 26, 27, 43, 45, 29, 37, 46,
+                                  38, 30, 39]
 
         # icons with structure: [[color,ledIDs],[color,ledIDs],...]
         self.icons = {'scattered_cloud': [[Color(255, 255, 255), cloudIds]],
@@ -92,11 +94,12 @@ class LedMatrix:
                       'few_clouds': [[Color(255, 255, 0), smallSunIds],
                                      [Color(255, 255, 255), smallCloudIds]],
                       'snow': [[Color(255, 255, 255), snowIds]],
-                      'broken_clouds': [[Color(0, 0, 0), smallBlackCloudIds], 
+                      'broken_clouds': [[Color(0, 0, 0), smallBlackCloudIds],
                                         [Color(255, 255, 255), smallWhiteCloudIds]],
                       'error': [[Color(255, 0, 0), [36, 35, 34, 33, 38, 54, 52,
                                                     51, 50, 49, 17, 18, 19, 20,
-                                                    22, 6, 4, 3, 2, 1]]]}
+                                                    22, 6, 4, 3, 2, 1]]],
+                      'connection_error': [[Color(255, 0, 0), connectionErrorIds]]}
 
         self.strip = Adafruit_NeoPixel(self.LED_COUNT, self.LED_PIN, self.LED_FREQ_HZ,
                                        self.LED_DMA, self.LED_INVERT, self.LED_BRIGHTNESS,
