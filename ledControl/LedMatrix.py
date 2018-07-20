@@ -76,9 +76,9 @@ class LedMatrix:
             smallSunIds = [19, 18, 26, 33, 40, 9, 0]
             snowIds = [38, 29, 22, 31, 12, 19, 3, 10, 52, 43, 59, 50, 25, 32,
                        16, 62, 55]
-            smallBlackCloudIds = [60, 55, 47, 39, 31, 22, 21, 28, 36, 61, 62,
+            smallWhiteCloudIds = [60, 55, 47, 39, 31, 22, 21, 28, 36, 61, 62,
                                   43, 51]
-            smallWhiteCloudIds = [42, 33, 25, 18, 10, 3, 4, 13]
+            smallBlackCloudIds = [42, 33, 25, 18, 10, 3, 4, 13]
             connectionErrorIds = [32, 33, 42, 34, 26, 27, 43, 45, 29, 37, 46,
                                   38, 30, 39]
 
@@ -94,8 +94,8 @@ class LedMatrix:
                       'few_clouds': [[Color(255, 255, 0), smallSunIds],
                                      [Color(255, 255, 255), smallCloudIds]],
                       'snow': [[Color(255, 255, 255), snowIds]],
-                      'broken_clouds': [[Color(128, 128, 128), smallBlackCloudIds],
-                                        [Color(255, 255, 255), smallWhiteCloudIds]],
+                      'broken_clouds': [[Color(255, 255, 255), smallWhiteloudIds],
+                                        [Color(25, 25, 112), smallBlackCloudIds]],
                       'error': [[Color(255, 0, 0), [36, 35, 34, 33, 38, 54, 52,
                                                     51, 50, 49, 17, 18, 19, 20,
                                                     22, 6, 4, 3, 2, 1]]],
