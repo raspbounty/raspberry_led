@@ -94,7 +94,7 @@ class LedMatrix:
                       'few_clouds': [[Color(255, 255, 0), smallSunIds],
                                      [Color(255, 255, 255), smallCloudIds]],
                       'snow': [[Color(255, 255, 255), snowIds]],
-                      'broken_clouds': [[Color(0, 0, 0), smallBlackCloudIds],
+                      'broken_clouds': [[Color(128, 128, 128), smallBlackCloudIds],
                                         [Color(255, 255, 255), smallWhiteCloudIds]],
                       'error': [[Color(255, 0, 0), [36, 35, 34, 33, 38, 54, 52,
                                                     51, 50, 49, 17, 18, 19, 20,
