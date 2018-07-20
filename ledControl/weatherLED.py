@@ -105,3 +105,8 @@ if __name__ == '__main__':
     except KeyboardInterrupt:
         matrix.colorWipe()
         GPIO.cleanup()
+    except:
+        errorString = "Unexpected error: {}".format(sys.exc_info()[0])
+        print(errorString)
+        with open("errorLog.txt", "a") as logFile:
+            logfile.write(errorString)
